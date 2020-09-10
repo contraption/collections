@@ -1,6 +1,6 @@
 {
-  "name": "contraption/component",
-  "description": "A Contraption component",
+  "name": "contraption/collections",
+  "description": "Contraption collections component",
   "type": "package",
   "license": "MIT",
   "authors": [
@@ -11,8 +11,13 @@
   ],
   "autoload": {
     "psr-4": {
-      "Contraption\\Component\\": "src/"
+      "Contraption\\Collections\\": "src/"
     }
   },
-  "require": {}
+  "require": {
+    "ext-ds": "*"
+  },
+  "require-dev": {
+    "php-ds/php-ds": "^1.0"
+  }
 }
