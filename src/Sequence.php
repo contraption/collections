@@ -154,6 +154,16 @@ class Sequence extends Collection implements Contracts\Sequence
     /**
      * @inheritDoc
      */
+    public function getIterator()
+    {
+        foreach ($this->vector as $value) {
+            yield $value;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function join(?string $glue = null): string
     {
         return $this->getDs()->join($glue);
