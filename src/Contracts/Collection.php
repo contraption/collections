@@ -4,7 +4,7 @@ namespace Contraption\Collections\Contracts;
 
 use Countable;
 use Ds;
-use Traversable;
+use IteratorAggregate;
 
 /**
  * Collection Contract
@@ -13,7 +13,7 @@ use Traversable;
  *
  * @package Contraption\Collections
  */
-interface Collection extends Traversable, Countable
+interface Collection extends IteratorAggregate, Countable
 {
     /**
      * Get the entire collection as an array.
