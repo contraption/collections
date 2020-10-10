@@ -39,9 +39,9 @@ interface Collection extends IteratorAggregate, Countable
     /**
      * Count the items in the collection.
      *
-     * @return bool
+     * @return int
      */
-    public function count(): bool;
+    public function count(): int;
 
     /**
      * Check if the collection is empty.

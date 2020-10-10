@@ -35,7 +35,7 @@ abstract class Collection implements Contracts\Collection
     /**
      * @inheritDoc
      */
-    public function count(): bool
+    public function count(): int
     {
         return $this->getDs()->count();
     }
