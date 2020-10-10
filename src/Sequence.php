@@ -20,10 +20,12 @@ class Sequence extends Collection implements Contracts\Sequence
 
     public function __construct(?iterable $values = null)
     {
-        if ($values instanceof Ds\Vector) {
-            $this->setDs($values);
-        } else {
-            $this->setDs(new Ds\Vector($values));
+        if ($values !== null) {
+            if ($values instanceof Ds\Vector) {
+                $this->setDs($values);
+            } else {
+                $this->setDs(new Ds\Vector($values));
+            }
         }
     }
 
