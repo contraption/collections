@@ -128,7 +128,15 @@ class Sequence extends Collection implements Contracts\Sequence
      */
     public function filter(?callable $callback = null): self
     {
-        $this->setDs($this->getDs()->filter($callback));
+        $ds = $this->getDs();
+
+        if ($callback === null) {
+            $ds = $ds->filter();
+        } else {
+            $ds = $ds->filter($callback);
+        }
+
+        $this->setDs($ds);
 
         return $this;
     }
