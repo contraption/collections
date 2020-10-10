@@ -14,11 +14,22 @@
       "Contraption\\Collections\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Contraption\\Collections\\Tests\\": "tests/"
+    }
+  },
   "require": {
     "php": "^7.4",
     "ext-ds": "*"
   },
   "require-dev": {
-    "php-ds/php-ds": "^1.0"
+    "php-ds/php-ds": "^1.0",
+    "phpunit/phpunit": "^9.0",
+    "limedeck/phpunit-detailed-printer": "^6.0",
+    "fzaninotto/faker": "^1.0"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
   }
 }
