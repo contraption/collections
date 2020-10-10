@@ -114,7 +114,7 @@ interface Collection extends IteratorAggregate, Countable
      *
      * @return static
      */
-    public function push(array $values): self;
+    public function push(...$values): self;
 
     /**
      * Add the value to the collection using the provided key.

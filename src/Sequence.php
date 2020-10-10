@@ -202,7 +202,7 @@ class Sequence extends Collection implements Contracts\Sequence
     /**
      * @inheritDoc
      */
-    public function push(array $values): self
+    public function push(...$values): self
     {
         $this->getDs()->push(...$values);
 
