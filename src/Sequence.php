@@ -2,282 +2,130 @@
 
 namespace Contraption\Collections;
 
-use Ds;
+use Contraption\Collections\Contracts\Stackable;
 use InvalidArgumentException;
 use OutOfRangeException;
 
 /**
- * Sequence Collection
+ * Sequence
  *
  * A sequence is a collection arranged in a single linear dimension. A sequences keys are always sequential
  * starting at 0, meaning that a given values index/key can change dependant on the operations performed.
  *
  * @package Contraption\Collections
  */
-class Sequence extends Collection implements Contracts\Sequence
+class Sequence implements Contracts\Sequence
 {
-    protected Ds\Vector $vector;
+    use Concerns\EnumeratesItems,
+        Concerns\TransformsItems,
+        Concerns\StacksItems,
+        Concerns\CollectsItems;
 
-    public function __construct(?iterable $values = null)
+    public function __construct(iterable $items = [])
     {
-        if ($values !== null) {
-            if ($values instanceof Ds\Vector) {
-                $this->setDs($values);
-            } else {
-                $this->setDs(new Ds\Vector($values));
-            }
+        $this->setItems($items);
+    }
+
+    private function checkIndex(mixed $key): void
+    {
+        if (! is_int($key)) {
+            throw new InvalidArgumentException('Sequence keys/indexes must be integers');
+        }
+
+        if ($key > $this->count()) {
+            throw new OutOfRangeException(sprintf('Index %s is out of range for this sequence', $key));
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function contains(...$values): bool
+    public function insert(int $index, mixed ...$values): static
     {
-        return $this->getDs()->contains(...$values);
+        $this->checkIndex($index);
+
+        array_splice($this->items, $index, 0, $values);
+
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function find($value): ?int
+    public function peek(int $direction = Stackable::DIRECTION_TOP): mixed
     {
-        $index = $this->getDs()->find($value);
+        if ($direction === Stackable::DIRECTION_TOP) {
+            return $this->first();
+        }
 
-        return $index === false ? null : $index;
+        if ($direction === Stackable::DIRECTION_BOTTOM) {
+            return $this->last();
+        }
+
+        throw new InvalidArgumentException(sprintf('Invalid direction for peeking: %s', $direction));
     }
 
     /**
      * @inheritDoc
      */
-    public function first()
+    public function put(mixed $key, mixed $value): static
     {
-        return $this->getDs()->first();
+        $this->checkIndex($key);
+        $this->items[$key] = $value;
+
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function insert(int $index, ...$values): self
+    public function remove(mixed $key): mixed
     {
-        try {
-            $this->getDs()->insert($index, ...$values);
-        } catch (OutOfRangeException $exception) {
-            throw new InvalidArgumentException('Index provided for insertion is out of range', 0, $exception);
+        $this->checkIndex($key);
+
+        if (array_key_exists($key, $this->getItems())) {
+            $value = $this->get($key);
+            unset($this->items[$key]);
+            $this->resetKeys();
+
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rotate(int $rotations): static
+    {
+        $rotations = $this->normaliseRotations($rotations);
+
+        for ($i = $rotations; $i > 0; $i--) {
+            $this->push($this->shift());
         }
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function last()
+    private function normaliseRotations(int $rotations): int
     {
-        return $this->getDs()->last();
-    }
+        $count = $this->count();
 
-    /**
-     * @inheritDoc
-     */
-    public function pop()
-    {
-        return $this->getDs()->pop();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function reverse(): self
-    {
-        $this->getDs()->reverse();
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rotate(int $rotations): self
-    {
-        $this->getDs()->rotate($rotations);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function shift()
-    {
-        return $this->getDs()->shift();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function unshift(...$values): self
-    {
-        $this->getDs()->unshift(...$values);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function filter(?callable $callback = null): self
-    {
-        $ds = $this->getDs();
-
-        if ($callback === null) {
-            $ds = $ds->filter();
-        } else {
-            $ds = $ds->filter($callback);
+        if ($count < 2) {
+            return 0;
         }
 
-        $this->setDs($ds);
-
-        return $this;
+        return $rotations < 0 ? $count - (abs($rotations) % $count) : $rotations % $count;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function get($key, $default = null)
+    private function resetKeys(): void
     {
-        try {
-            return $this->getDs()->get($key) ?? $default;
-        } catch (OutOfRangeException $exception) {
-            return $default;
-        }
+        $this->items = array_values($this->items);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getDs(): Ds\Vector
+    public function unique(): Set
     {
-        return $this->vector;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIterator()
-    {
-        foreach ($this->vector as $value) {
-            yield $value;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function join(?string $glue = null): string
-    {
-        return $this->getDs()->join($glue);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function map(callable $callback): self
-    {
-        $this->setDs($this->getDs()->map($callback));
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function merge(iterable $collection): self
-    {
-        $this->setDs($this->getDs()->merge($collection));
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function push(...$values): self
-    {
-        $this->getDs()->push(...$values);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function put($key, $value): self
-    {
-        $this->getDs()->set($key, $value);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function reduce(callable $callback, $initial = null)
-    {
-        return $this->getDs()->reduce($callback, $initial);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function remove($key)
-    {
-        try {
-            return $this->getDs()->remove($key);
-        } catch (OutOfRangeException $exception) {
-            throw new InvalidArgumentException('Index provided for removal is out of range', $exception);
-        }
-    }
-
-    /**
-     * @param \Ds\Collection|\Ds\Vector $collection
-     *
-     * @return static
-     */
-    protected function setDs(Ds\Collection $collection): self
-    {
-        if (! ($collection instanceof Ds\Vector)) {
-            throw new InvalidArgumentException('Invalid Ds collection provided');
-        }
-
-        $this->vector = $collection;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function slice(int $offset, int $length = null): self
-    {
-        return new static($this->getDs()->slice($offset, $length));
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sort(callable $comparator = null): self
-    {
-        $this->getDs()->sort($comparator);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sum()
-    {
-        return $this->getDs()->sum();
+        return new Set($this->getItems());
     }
 }

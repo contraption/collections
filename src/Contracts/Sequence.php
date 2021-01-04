@@ -12,33 +12,8 @@ use Ds;
  *
  * @package Contraption\Collections
  */
-interface Sequence extends Collection
+interface Sequence extends Enumerable, Transformable, Stackable
 {
-    /**
-     * See if all of the given values are contained within the collection.
-     *
-     * @param mixed ...$values
-     *
-     * @return bool
-     */
-    public function contains(...$values): bool;
-
-    /**
-     * Get the index for a given value.
-     *
-     * @param $value
-     *
-     * @return int|null If the value wasn't found null is returned
-     */
-    public function find($value): ?int;
-
-    /**
-     * Get the first value in the collection.
-     *
-     * @return mixed
-     */
-    public function first();
-
     /**
      * Put the given values into the collection starting at the provided index, shifting all
      * subsequent values one index to the right.
@@ -48,28 +23,7 @@ interface Sequence extends Collection
      *
      * @return static
      */
-    public function insert(int $index, ...$values): self;
-
-    /**
-     * Get the last value in the collection.
-     *
-     * @return mixed
-     */
-    public function last();
-
-    /**
-     * Remove and return the last value in the collection.
-     *
-     * @return mixed
-     */
-    public function pop();
-
-    /**
-     * Reverse the collection in place.
-     *
-     * @return static
-     */
-    public function reverse(): self;
+    public function insert(int $index, mixed ...$values): static;
 
     /**
      * Rotate the collection in place by the amount provided, removing the first value in the
@@ -82,21 +36,5 @@ interface Sequence extends Collection
      *
      * @return static
      */
-    public function rotate(int $rotations): self;
-
-    /**
-     * Remove and return the first value in the collection.
-     *
-     * @return mixed
-     */
-    public function shift();
-
-    /**
-     * Put the given values on the start of the collection.
-     *
-     * @param mixed ...$values
-     *
-     * @return static
-     */
-    public function unshift(...$values): self;
+    public function rotate(int $rotations): static;
 }

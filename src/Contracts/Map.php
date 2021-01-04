@@ -7,64 +7,37 @@ use Ds\Pair;
 /**
  * Map Contract
  *
- * A map is a sequential collection of key-value pairs, virtually identical to an array. Unlike arrays,
- * a maps key can be anything, even objects, as long as it's unique. Object keys must implement
- * {@see \Ds\Hashable}.
- *
- * @method \Ds\Map getDs()
+ * A map is a sequential collection of key-value pairs, virtually identical to an array.
  *
  * @package Contraption\Collections
  */
-interface Map extends Collection
+interface Map extends Enumerable, Transformable
 {
-    /**
-     * See if all of the given values are contained within the collection.
-     *
-     * @param mixed ...$values
-     *
-     * @return bool
-     */
-    public function contains(...$values): bool;
-
     /**
      * Create a new map containing all items that do not have corresponding
      * keys in the provided map.
      *
      * @param \Contraption\Collections\Contracts\Map $map
      *
-     * @return self
+     * @return static
      */
-    public function diff(Map $map): self;
-
-    /**
-     * Get the first value in the collection.
-     *
-     * @return mixed
-     */
-    public function first();
+    public function diff(Map $map): static;
 
     /**
      * Get the key for the first entry in the collection.
      *
      * @return mixed
      */
-    public function firstKey();
-
-    /**
-     * Get the first {@see \Ds\Pair} in the collection.
-     *
-     * @return \Ds\Pair|null
-     */
-    public function firstPair(): ?Pair;
+    public function firstKey(): mixed;
 
     /**
      * See if an entry exists with the given key.
      *
-     * @param $key
+     * @param mixed $key
      *
      * @return bool
      */
-    public function has($key): bool;
+    public function has(mixed $key): bool;
 
     /**
      * Create a new map containing all items that have corresponding keys in
@@ -74,7 +47,7 @@ interface Map extends Collection
      *
      * @return static
      */
-    public function intersect(self $map): self;
+    public function intersect(self $map): static;
 
     /**
      * Get a sequence all of keys in the collection.
@@ -90,44 +63,14 @@ interface Map extends Collection
      *
      * @return static
      */
-    public function ksort(callable $comparator = null): self;
-
-    /**
-     * Get the last value in the collection.
-     *
-     * @return mixed
-     */
-    public function last();
+    public function ksort(callable $comparator = null): static;
 
     /**
      * Get the key for the last value in the collection.
      *
      * @return mixed
      */
-    public function lastKey();
-
-    /**
-     * Get the last {@see \Ds\Pair} in the collection.
-     *
-     * @return \Ds\Pair|null
-     */
-    public function lastPair(): ?Pair;
-
-    /**
-     * Get the collection as a collection of pairs.
-     *
-     * @return \Contraption\Collections\Contracts\Sequence
-     *                                                    
-     * @see \Ds\Pair
-     */
-    public function pairs(): Sequence;
-
-    /**
-     * Reverse the order of the items in this collection.
-     *
-     * @return static
-     */
-    public function reverse(): self;
+    public function lastKey(): mixed;
 
     /**
      * Create a new map containing all items that have keys in the current or
@@ -137,5 +80,5 @@ interface Map extends Collection
      *
      * @return static
      */
-    public function xor(Map $map): self;
+    public function xor(Map $map): static;
 }
