@@ -2,6 +2,13 @@
 
 namespace Contraption\Collections\Contracts;
 
+/**
+ * Transformable Contract
+ *
+ * A transformable collection is one where you can transform the items in place.
+ *
+ * @package Contraption\Collections\Contracts
+ */
 interface Transformable
 {
     /**

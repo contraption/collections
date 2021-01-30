@@ -2,8 +2,6 @@
 
 namespace Contraption\Collections\Contracts;
 
-use Ds;
-
 /**
  * Sequence Contract
  *
@@ -37,4 +35,13 @@ interface Sequence extends Enumerable, Transformable, Stackable
      * @return static
      */
     public function rotate(int $rotations): static;
+
+    /**
+     * Adds a single entry to the end of the sequence.
+     *
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function add(mixed $value): static;
 }

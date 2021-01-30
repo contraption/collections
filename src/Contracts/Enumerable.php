@@ -4,6 +4,14 @@ namespace Contraption\Collections\Contracts;
 
 use IteratorAggregate;
 
+/**
+ * Enumerable Contract
+ *
+ * An enumerable collection is one where you can freely access all items.
+ * From retrieving all, to getting or setting any.
+ *
+ * @package Contraption\Collections\Contracts
+ */
 interface Enumerable extends Collection, IteratorAggregate
 {
     /**
@@ -36,16 +44,18 @@ interface Enumerable extends Collection, IteratorAggregate
     /**
      * Get the first value in the collection.
      *
+     * @param callable|null $comparator
+     *
      * @return mixed
      */
-    public function first(): mixed;
+    public function first(?callable $comparator = null): mixed;
 
     /**
      * Get the value for the provided key.
      *
      * @param mixed $key
-     * @param null $default A default value that should be returned if the value fails a
-     *                      boolean test.
+     * @param null  $default A default value that should be returned if the value fails a
+     *                       boolean test.
      *
      * @return mixed
      */
@@ -54,9 +64,11 @@ interface Enumerable extends Collection, IteratorAggregate
     /**
      * Get the last value in the collection.
      *
+     * @param callable|null $comparator
+     *
      * @return mixed
      */
-    public function last(): mixed;
+    public function last(?callable $comparator = null): mixed;
 
     /**
      * Add the value to the collection using the provided key.

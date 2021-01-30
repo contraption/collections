@@ -2,6 +2,16 @@
 
 namespace Contraption\Collections\Contracts;
 
+use IteratorAggregate;
+
+/**
+ * Stackable Contract
+ *
+ * A stackable collection is one where you can pop and push, as well as shift
+ * and unshift.
+ *
+ * @package Contraption\Collections\Contracts
+ */
 interface Stackable
 {
     /**
@@ -33,11 +43,11 @@ interface Stackable
     /**
      * Push all of the values onto the collection.
      *
-     * @param array $values
+     * @param mixed ...$values
      *
      * @return static
      */
-    public function push(array $values): static;
+    public function push(mixed ...$values): static;
 
     /**
      * Remove and return the first value in the collection.

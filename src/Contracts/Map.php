@@ -2,8 +2,6 @@
 
 namespace Contraption\Collections\Contracts;
 
-use Ds\Pair;
-
 /**
  * Map Contract
  *

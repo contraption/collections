@@ -60,8 +60,8 @@ interface Collection extends Countable
     /**
      * Reduce the collection iteratively to a single value.
      *
-     * @param callable $callback Should accept the value and the carry, returning a new carry
-     * @param mixed|null     $initial  The initial carry value
+     * @param callable   $callback Should accept the value and the carry, returning a new carry
+     * @param mixed|null $initial  The initial carry value
      *
      * @return mixed
      */

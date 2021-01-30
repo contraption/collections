@@ -11,7 +11,7 @@ trait CollectsItems
      */
     public function all(): array
     {
-        return (array)$this->getItems();
+        return (array) $this->getItems();
     }
 
     /**
