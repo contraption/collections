@@ -2,6 +2,13 @@
 
 namespace Contraption\Collections;
 
+/**
+ * Class MultiMap
+ *
+ * @method \Contraption\Collections\Contracts\Sequence get(mixed $key, mixed $default = null)
+ *
+ * @package Contraption\Collections
+ */
 class MultiMap extends Map
 {
     /**
@@ -98,5 +105,16 @@ class MultiMap extends Map
         $this->items[$key] = $value;
 
         return $this;
+    }
+
+    public function flatten(): Contracts\Sequence
+    {
+        $flattened = new Sequence();
+
+        $this->each(function (Contracts\Sequence $sequence) use($flattened) {
+            $flattened->merge($sequence);
+        });
+
+        return $flattened;
     }
 }

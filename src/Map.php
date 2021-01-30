@@ -26,13 +26,13 @@ class Map implements Contracts\Map
     public function diff(Contracts\Map $map): static
     {
         $diffedMap = new static;
-        
+
         foreach ($this as $key => $value) {
             if (! $map->has($key)) {
                 $diffedMap->put($key, $value);
             }
         }
-        
+
         return $diffedMap;
     }
 
@@ -103,7 +103,7 @@ class Map implements Contracts\Map
      */
     public function xor(Contracts\Map $map): static
     {
-        return $this->merge($map)->filter(function($key) use ($map) {
+        return $this->merge($map)->filter(function ($key) use ($map) {
             return $this->has($key) ^ $map->has($key);
         });
     }

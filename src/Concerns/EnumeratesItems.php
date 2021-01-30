@@ -43,8 +43,22 @@ trait EnumeratesItems
     /**
      * @inheritDoc
      */
-    public function first(): mixed
+    public function first(?callable $comparator = null): mixed
     {
+        if ($this->count() === 0) {
+            return null;
+        }
+
+        if ($comparator !== null) {
+            foreach ($this->getItems() as $key => $item) {
+                if ($comparator($item, $key) === true) {
+                    return $item;
+                }
+            }
+
+            return null;
+        }
+
         return $this->getItems()[array_key_first($this->getItems())];
     }
 
@@ -69,8 +83,16 @@ trait EnumeratesItems
     /**
      * @inheritDoc
      */
-    public function last(): mixed
+    public function last(?callable $comparator = null): mixed
     {
+        if ($this->count() === 0) {
+            return null;
+        }
+
+        if ($comparator !== null) {
+            return $this->copy()->reverse()->first($comparator);
+        }
+
         return $this->getItems()[array_key_last($this->getItems())];
     }
 
